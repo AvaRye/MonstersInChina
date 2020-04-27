@@ -3,10 +3,14 @@ package com.example.monstersinchina.service
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.example.monstersinchina.view.HomeActivity
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.*
+import org.jetbrains.anko.activityManager
+import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
 class ViewModel(private val context: Context) {
-    fun getHome() = GlobalScope.launch(Dispatchers.Main) {
+    fun getHome(activity: HomeActivity) = GlobalScope.launch(Dispatchers.Main) {
         SpiderApi.getHomeAsync().awaitAndHandle {
             Log.d("getHome", it.toString())
             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
@@ -14,6 +18,7 @@ class ViewModel(private val context: Context) {
             homeLiveData.postValue(it)
         }
         loadingLiveData.postValue(false)
+        activity.srl_menu.isRefreshing = false
     }
 
     fun getHome(page: Int) = GlobalScope.launch(Dispatchers.Main) {

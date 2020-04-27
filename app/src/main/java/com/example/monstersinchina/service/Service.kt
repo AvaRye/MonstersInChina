@@ -8,31 +8,30 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.jetbrains.anko.custom.async
 
 object SpiderApi {
 
     private const val baseUrl = "http://www.cbaigui.com/"
     private val client = OkHttpClient()
 
-    fun getHomeAsync(): Deferred<List<Home>> =
+    fun getHomeAsync(): Deferred<HomePage> =
         GlobalScope.async(IO + QuietCoroutineExceptionHandler) {
             client.newCall(
                 Request.Builder()
                     .url(baseUrl)
                     .get()
                     .build()
-            ).execute().body()?.string().orEmpty().parseHome()
+            ).execute().body()?.string().orEmpty().parseHomePage()
         }
 
-    fun getHomeAsync(page: Int): Deferred<List<Home>> =
+    fun getHomeAsync(page: Int): Deferred<HomePage> =
         GlobalScope.async(IO + QuietCoroutineExceptionHandler) {
             client.newCall(
                 Request.Builder()
                     .url("$baseUrl?paged=$page")
                     .get()
                     .build()
-            ).execute().body()?.string().orEmpty().parseHome()
+            ).execute().body()?.string().orEmpty().parseHomePage()
         }
 
     fun getDetailAsync(url: String): Deferred<Detail> =
@@ -47,9 +46,14 @@ object SpiderApi {
 
 }
 
-val homeLiveData = MutableLiveData<List<Home>>()
+val homeLiveData = MutableLiveData<HomePage>()
 val detailLiveData = MutableLiveData<Detail>()
 val loadingLiveData = MutableLiveData<Boolean>()//loading flag
+
+data class HomePage(
+    val homeList: List<Home>,
+    val finalPage: Int
+)
 
 data class Home(
     val name: String,
@@ -57,7 +61,7 @@ data class Home(
     val description: String,
     val date: String,
     val url: String,
-    val finalPage: Int
+    val type: String
 )
 
 data class Detail(

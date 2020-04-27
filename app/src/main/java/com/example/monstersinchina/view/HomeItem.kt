@@ -19,12 +19,14 @@ class HomeItem() : Item {
         override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             val view = parent.context.layoutInflater.inflate(R.layout.item_home, parent, false)
             val image = view.iv_home_item
+            val imageCard = view.cv_home_img
             val name = view.tv_home_item_name
             val description = view.tv_home_item_description
             val card = view.cv_home_item
             return ViewHolder(
                 view,
                 image,
+                imageCard,
                 name,
                 description,
                 card
@@ -40,6 +42,7 @@ class HomeItem() : Item {
         internal class ViewHolder(
             itemView: View,
             val image: ImageView,
+            val imageCard: CardView,
             val name: TextView,
             val description: TextView,
             val card: CardView

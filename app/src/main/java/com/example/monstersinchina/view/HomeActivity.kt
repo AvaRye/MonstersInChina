@@ -2,11 +2,13 @@ package com.example.monstersinchina.view
 
 import android.content.Intent
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,54 +42,15 @@ class HomeActivity : AppCompatActivity() {
         window.statusBarColor = Color.BLACK.withAlpha(80)
         loadingLiveData.postValue(false)
 
-        /*
-        val baseUrl = "http://www.cbaigui.com/"
-        val client = OkHttpClient()
-        GlobalScope.launch(Dispatchers.IO) {
-            val string = client.newCall(
-                Request.Builder()
-                    .url(baseUrl)
-                    .get()
-                    .build()
-            ).execute().body()?.string().orEmpty()
-
-            Log.d("getHtml",string)
-        }*/
-
-        /*
-        val list = mutableListOf<Home>()
-        list.add(
-            Home(
-                "孽龙",
-                "http://www.cbaigui.com/wp-content/uploads/2019/10/中国妖怪百集loading-320x320.jpg",
-                "传说能兴水为害、作恶造孽的龙。 傩戏中邪&#46;&#46;&#46;",
-                "2020/03/12",
-                "sff",
-                32
-            )
-        )
-
-        list.add(
-            Home(
-                "玉兔",
-                "http://www.cbaigui.com/wp-content/uploads/2019/07/ChanchuYutuWadang-320x320.jpg",
-                "在中国神话中，月兔在月宫陪伴嫦娥并捣药。&#46;&#46;&#46;",
-                "2020/03/12",
-                "sff",
-                32
-            )
-        )
-        homeLiveData.postValue(list)
-        */
-
         srl_menu.apply {
             setOnRefreshListener {
+                setColorSchemeResources(R.color.colorPrimary)
                 if (loadingLiveData.value != true) {
                     loadingLiveData.postValue(true)
                     resetPage()
                     itemManager.autoRefresh {
                         removeAll { it is HomeItem }
-                        viewModel.getHome()
+                        viewModel.getHome(this@HomeActivity)
                     }
                 }
             }
@@ -103,20 +66,31 @@ class HomeActivity : AppCompatActivity() {
                     if (!canScrollVertically(1) && page < finalPage && loadingLiveData.value != true) {
                         loadingLiveData.postValue(true)
                         viewModel.getHome(++page)
+                        Toast.makeText(this@HomeActivity, "$page, $finalPage", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             })
         }
 
-        viewModel.getHome()
-        homeLiveData.bindNonNull(this) { list ->
-            finalPage = list[0].finalPage
+        viewModel.getHome(this)
+
+        homeLiveData.bindNonNull(this) { homePage ->
+            finalPage = homePage.finalPage
             val items = mutableListOf<Item>()
-            list.forEach { home ->
+            homePage.homeList.forEach { home ->
                 items.homeItem {
-                    Glide.with(this@HomeActivity)
-                        .load(home.image)
-                        .into(image)
+                    when (home.type) {
+                        "withPic" -> {
+                            this.imageCard.visibility = View.VISIBLE
+                            Glide.with(this@HomeActivity)
+                                .load(home.image)
+                                .into(image)
+                        }
+                        "noPic" -> {
+                            this.imageCard.visibility = View.GONE
+                        }
+                    }
                     name.text = home.name
                     description.text = home.description
                     card.setOnClickListener {
@@ -141,6 +115,5 @@ class HomeActivity : AppCompatActivity() {
         page = 1
         finalPage = 1
     }
-
 
 }
