@@ -6,8 +6,6 @@ import android.widget.Toast
 import com.example.monstersinchina.view.HomeActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.*
-import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
 class ViewModel(private val context: Context) {
     fun getHome(activity: HomeActivity) = GlobalScope.launch(Dispatchers.Main) {
@@ -18,7 +16,7 @@ class ViewModel(private val context: Context) {
             homeLiveData.postValue(it)
         }
         loadingLiveData.postValue(false)
-        activity.srl_menu.isRefreshing = false
+        activity.srl_home.isRefreshing = false
     }
 
     fun getHome(page: Int) = GlobalScope.launch(Dispatchers.Main) {

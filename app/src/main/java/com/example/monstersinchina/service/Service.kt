@@ -1,5 +1,6 @@
 package com.example.monstersinchina.service
 
+import android.text.Html
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,7 +35,7 @@ object SpiderApi {
             ).execute().body()?.string().orEmpty().parseHomePage()
         }
 
-    fun getDetailAsync(url: String): Deferred<Detail> =
+    fun getDetailAsync(url: String): Deferred<DetailPage> =
         GlobalScope.async(IO + QuietCoroutineExceptionHandler) {
             client.newCall(
                 Request.Builder()
@@ -47,7 +48,7 @@ object SpiderApi {
 }
 
 val homeLiveData = MutableLiveData<HomePage>()
-val detailLiveData = MutableLiveData<Detail>()
+val detailLiveData = MutableLiveData<DetailPage>()
 val loadingLiveData = MutableLiveData<Boolean>()//loading flag
 
 data class HomePage(
@@ -64,8 +65,15 @@ data class Home(
     val type: String
 )
 
+data class DetailPage(
+    val date: String,
+    val title: String,
+    val detail: List<Detail>
+)
+
 data class Detail(
-    val detail: String
+    val type: String,
+    val content: String
 )
 
 inline fun <T> LiveData<T>.bindNonNull(

@@ -1,5 +1,6 @@
 package com.example.monstersinchina.service
 
+import android.text.Html
 import android.util.Log
 import org.jsoup.Jsoup
 
@@ -42,7 +43,33 @@ fun String.parseHomePage(): HomePage {
     )
 }
 
-fun String.parseDetail(): Detail {
-    val doc = Jsoup.parse(this)
-    return Detail("")
+fun String.parseDetail(): DetailPage {
+    val content = Jsoup.parse(this).body().getElementsByClass("content")[0]
+    val date = content.getElementsByClass("post-time")[0].text()
+    val title = content.getElementsByClass("post-title")[0].text()
+    val detail = content.getElementsByClass("entry")[0]
+    val detailList = mutableListOf<Detail>()
+    val pList = detail.getElementsByTag("p")
+    pList.forEach {
+        if (it.getElementsByTag("strong").isNullOrEmpty()) {
+            if (it.getElementsByTag("img").isNullOrEmpty()) {
+                detailList.add(Detail(type = "text", content = it.text()))
+            } else {
+                detailList.add(
+                    Detail(
+                        type = "img",
+                        content = it.getElementsByTag("img").attr("src")
+                    )
+                )
+            }
+        } else {
+            detailList.add(Detail(type = "strong", content = it.text()))
+        }
+    }
+
+    return DetailPage(
+        date = date,
+        title = title,
+        detail = detailList
+    )
 }

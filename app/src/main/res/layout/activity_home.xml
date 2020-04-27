@@ -8,25 +8,27 @@
     tools:context=".view.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/abl_menu"
+        android:id="@+id/abl_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorTransparent"
         android:orientation="vertical"
         android:outlineSpotShadowColor="@color/colorTransparent">
 
-        <include layout="@layout/item_toolbar" />
+        <include
+            android:id="@+id/tb_home"
+            layout="@layout/item_toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/srl_menu"
+        android:id="@+id/srl_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_menu"
+            android:id="@+id/rv_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" />

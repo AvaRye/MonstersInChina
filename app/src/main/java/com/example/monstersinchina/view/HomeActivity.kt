@@ -2,15 +2,12 @@ package com.example.monstersinchina.view
 
 import android.content.Intent
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,13 +17,7 @@ import com.example.monstersinchina.commens.rec.ItemAdapter
 import com.example.monstersinchina.commens.rec.ItemManager
 import com.example.monstersinchina.service.*
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.item_home.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import kotlinx.android.synthetic.main.item_toolbar.view.*
 import org.jetbrains.anko.withAlpha
 
 class HomeActivity : AppCompatActivity() {
@@ -40,9 +31,26 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         window.statusBarColor = Color.BLACK.withAlpha(80)
+
+        tb_home.apply {
+            tv_title.text = getText(R.string.app_name)
+            tv_toolbar.text = getText(R.string.string_home)
+            setOnTouchListener(OnDoubleClickListener {
+                rv_home.smoothScrollToPosition(0)
+                Toast.makeText(this@HomeActivity, "回到顶部👌", Toast.LENGTH_SHORT).show()
+            })
+
+        }
+
+
         loadingLiveData.postValue(false)
 
-        srl_menu.apply {
+//        abl_home.setOnTouchListener(OnDoubleClickListener {
+//            rv_home.smoothScrollToPosition(0)
+//            Toast.makeText(this, "回到顶部👌", Toast.LENGTH_SHORT).show()
+//        })
+
+        srl_home.apply {
             setOnRefreshListener {
                 setColorSchemeResources(R.color.colorPrimary)
                 if (loadingLiveData.value != true) {
@@ -56,7 +64,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        rv_menu.apply {
+        rv_home.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = ItemAdapter(itemManager)
             itemManager.autoRefresh { removeAll { it is HomeItem } }
@@ -66,8 +74,11 @@ class HomeActivity : AppCompatActivity() {
                     if (!canScrollVertically(1) && page < finalPage && loadingLiveData.value != true) {
                         loadingLiveData.postValue(true)
                         viewModel.getHome(++page)
-                        Toast.makeText(this@HomeActivity, "$page, $finalPage", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(
+                            this@HomeActivity,
+                            "第${page}页 共${finalPage}页",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             })
@@ -94,8 +105,8 @@ class HomeActivity : AppCompatActivity() {
                     name.text = home.name
                     description.text = home.description
                     card.setOnClickListener {
+                        viewModel.getDetail(home.url)
                         val intent = Intent(this@HomeActivity, DetailActivity::class.java)
-                            .putExtra("url", home.url)
                         startActivity(intent)
                     }
                 }
