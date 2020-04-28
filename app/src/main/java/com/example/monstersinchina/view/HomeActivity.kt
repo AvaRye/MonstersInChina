@@ -42,13 +42,7 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
-
         loadingLiveData.postValue(false)
-
-//        abl_home.setOnTouchListener(OnDoubleClickListener {
-//            rv_home.smoothScrollToPosition(0)
-//            Toast.makeText(this, "回到顶部👌", Toast.LENGTH_SHORT).show()
-//        })
 
         srl_home.apply {
             setOnRefreshListener {
@@ -92,21 +86,21 @@ class HomeActivity : AppCompatActivity() {
             homePage.homeList.forEach { home ->
                 items.homeItem {
                     when (home.type) {
-                        "withPic" -> {
+                        TYPE_WITH_PIC -> {
                             this.imageCard.visibility = View.VISIBLE
                             Glide.with(this@HomeActivity)
                                 .load(home.image)
                                 .into(image)
                         }
-                        "noPic" -> {
+                        TYPE_NO_PIC -> {
                             this.imageCard.visibility = View.GONE
                         }
                     }
                     name.text = home.name
                     description.text = home.description
                     card.setOnClickListener {
-                        viewModel.getDetail(home.url)
                         val intent = Intent(this@HomeActivity, DetailActivity::class.java)
+                            .putExtra("url", home.url)
                         startActivity(intent)
                     }
                 }

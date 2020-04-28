@@ -10,51 +10,72 @@
     <!--    android:theme="@style/Theme.AppCompat.Light.NoActionBar"-->
     <!--    app:layout_scrollFlags="scroll|enterAlways"-->
 
+    <!--    调整高度的-->
     <RelativeLayout
-        android:id="@+id/rl_toolbar"
+        android:id="@+id/rl_toolbar1"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="10dp"
+        android:layout_alignParentTop="true" />
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+    <!--    撑高度的-->
+    <RelativeLayout
+        android:id="@+id/rl_toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@id/rl_toolbar1" />
+
+    <!--    放东西的-->
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@id/rl_toolbar2"
         android:layout_centerVertical="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:fontFamily="@font/font_liu"
-        android:textColor="#3E281D"
-        android:textSize="22sp"
-        tools:text="@string/app_name" />
+        android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/tv_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:fontFamily="@font/font_liu"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="14sp"
-        tools:text="首页" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toStartOf="@id/tv_toolbar"
+            android:layout_toLeftOf="@id/tv_toolbar"
+            android:fontFamily="@font/font_liu"
+            android:textColor="#3E281D"
+            android:textSize="22sp"
+            tools:text="@string/app_name" />
 
-    <View
-        android:id="@+id/v_home_line"
-        android:layout_width="wrap_content"
-        android:layout_height="2dp"
-        android:layout_below="@id/rl_toolbar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark" />
+        <TextView
+            android:id="@+id/tv_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/font_liu"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            tools:text="首页" />
+
+        <View
+            android:id="@+id/v_home_line"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_below="@id/tv_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="7dp"
+            android:background="@color/colorPrimaryDark" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

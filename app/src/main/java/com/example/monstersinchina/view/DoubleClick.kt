@@ -17,6 +17,7 @@ class OnDoubleClickListener(val onDoubleClick: () -> Unit) : View.OnTouchListene
             } else if (count == 2) {
                 secondClick = System.currentTimeMillis()
                 if (secondClick - firstClick < doubleClickTime) {
+                    v?.performClick()
                     onDoubleClick()
                 }
                 count = 0

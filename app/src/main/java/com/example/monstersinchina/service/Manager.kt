@@ -1,8 +1,13 @@
 package com.example.monstersinchina.service
 
-import android.text.Html
 import android.util.Log
 import org.jsoup.Jsoup
+
+const val TYPE_IMAGE = "image"
+const val TYPE_TEXT = "text"
+const val TYPE_STRONG = "strong"
+const val TYPE_NO_PIC = "noPic"
+const val TYPE_WITH_PIC = "withPic"
 
 fun String.parseHomePage(): HomePage {
     val homeList = mutableListOf<Home>()
@@ -15,10 +20,10 @@ fun String.parseHomePage(): HomePage {
         val date = year + "年" + month + day + "日"
         val image = it.getElementsByTag("img")
         var imageUrl = "http://www.cbaigui.com/wp-content/uploads/2019/10/中国妖怪百集loading-320x320.jpg"
-        var type = "noPic"
+        var type = TYPE_NO_PIC
         if (!image.isNullOrEmpty()) {
             imageUrl = image[0].attr("src")
-            type = "withPic"
+            type = TYPE_WITH_PIC
         }
         val title = it.getElementsByClass("post-title")[0].getElementsByTag("a")[0]
         val name = title.text()
@@ -53,17 +58,17 @@ fun String.parseDetail(): DetailPage {
     pList.forEach {
         if (it.getElementsByTag("strong").isNullOrEmpty()) {
             if (it.getElementsByTag("img").isNullOrEmpty()) {
-                detailList.add(Detail(type = "text", content = it.text()))
+                detailList.add(Detail(type = TYPE_TEXT, content = it.text()))
             } else {
                 detailList.add(
                     Detail(
-                        type = "img",
+                        type = TYPE_IMAGE,
                         content = it.getElementsByTag("img").attr("src")
                     )
                 )
             }
         } else {
-            detailList.add(Detail(type = "strong", content = it.text()))
+            detailList.add(Detail(type = TYPE_STRONG, content = it.text()))
         }
     }
 
