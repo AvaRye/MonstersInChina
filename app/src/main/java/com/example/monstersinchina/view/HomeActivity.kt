@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.monstersinchina.R
-import com.example.monstersinchina.commens.rec.Item
-import com.example.monstersinchina.commens.rec.ItemAdapter
-import com.example.monstersinchina.commens.rec.ItemManager
+import com.example.monstersinchina.commons.Item
+import com.example.monstersinchina.commons.ItemAdapter
+import com.example.monstersinchina.commons.ItemManager
 import com.example.monstersinchina.service.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.item_toolbar.view.*

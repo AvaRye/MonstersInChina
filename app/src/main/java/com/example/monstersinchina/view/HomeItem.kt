@@ -7,15 +7,16 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.monstersinchina.R
-import com.example.monstersinchina.commens.rec.Item
-import com.example.monstersinchina.commens.rec.ItemController
+import com.example.monstersinchina.commons.Item
+import com.example.monstersinchina.commons.ItemController
 import kotlinx.android.synthetic.main.item_home.view.*
 import org.jetbrains.anko.layoutInflater
 
 class HomeItem() : Item {
     internal var builder: (ViewHolder.() -> Unit)? = null
 
-    companion object Controller : ItemController {
+    companion object Controller :
+        ItemController {
         override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             val view = parent.context.layoutInflater.inflate(R.layout.item_home, parent, false)
             val image = view.iv_home_item
