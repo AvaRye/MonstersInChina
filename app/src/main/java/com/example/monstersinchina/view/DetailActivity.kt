@@ -18,10 +18,8 @@ import kotlinx.android.synthetic.main.item_toolbar.view.*
 import org.jetbrains.anko.*
 
 class DetailActivity : AppCompatActivity() {
-    private val viewModel = ViewModel(this)
+    private val viewModel = ViewModel()
     private val itemManager = ItemManager()
-
-    lateinit var webView: WebView
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {

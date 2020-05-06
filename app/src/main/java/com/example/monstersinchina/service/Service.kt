@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.jetbrains.anko.custom.async
 
 object SpiderApi {
 
@@ -45,10 +46,20 @@ object SpiderApi {
             ).execute().body()?.string().orEmpty().parseDetail()
         }
 
+    fun getBookAsync(): Deferred<List<Book>> =
+        GlobalScope.async(IO + QuietCoroutineExceptionHandler) {
+            client.newCall(
+                Request.Builder()
+                    .url("$baseUrl?page_id=11600")
+                    .get()
+                    .build()
+            ).execute().body()?.string().orEmpty().parseBook()
+        }
 }
 
 val homeLiveData = MutableLiveData<HomePage>()
 val detailLiveData = MutableLiveData<DetailPage>()
+val bookLiveData = MutableLiveData<List<Book>>()
 val loadingLiveData = MutableLiveData<Boolean>()//loading flag
 
 data class HomePage(
@@ -63,6 +74,11 @@ data class Home(
     val date: String,
     val url: String,
     val type: String
+)
+
+data class Book(
+    val text: String,
+    val url: String?
 )
 
 data class DetailPage(

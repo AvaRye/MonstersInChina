@@ -78,3 +78,26 @@ fun String.parseDetail(): DetailPage {
         detail = detailList
     )
 }
+
+fun String.parseBook(): List<Book> {
+    val list = mutableListOf<Book>()
+    val content = Jsoup.parse(this).body().getElementsByClass("entry themeform")[0]
+    val letterList = content.getElementsByTag("p")
+    val bookList = content.getElementsByTag("table")
+    /*   letterList.forEach {
+           list.apply {
+               add(Book(it.text(), null))
+               bookList[it.elementSiblingIndex()].getElementsByTag("a").forEach { book ->
+                   this.add(Book(book.text(), book.attr("href")))
+               }
+           }
+       }*/
+
+    bookList.forEach {
+        it.getElementsByTag("a").forEach { book ->
+            list.add(Book(book.text(), book.attr("href")))
+        }
+    }
+
+    return list
+}

@@ -1,74 +1,41 @@
 package com.example.monstersinchina.view
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewParent
-import android.widget.LinearLayout
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+
 import com.example.monstersinchina.R
 import com.example.monstersinchina.commons.Item
 import com.example.monstersinchina.commons.ItemAdapter
 import com.example.monstersinchina.commons.ItemManager
 import com.example.monstersinchina.service.*
-import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.item_toolbar.view.*
-import org.jetbrains.anko.withAlpha
+import kotlinx.android.synthetic.main.fragment_main.view.*
 
-class HomeActivity : AppCompatActivity() {
+class MainFragment : Fragment() {
 
-    //    private var page = 1
-//    private var finalPage = 1
-//    private val itemManager = ItemManager()
-//    private val viewModel = ViewModel(this)
-    private lateinit var mainFragment: MainFragment
-    private lateinit var bookFragment: BookFragment
-    private lateinit var bottomTabLayout: TabLayout
-    private lateinit var bottomViewPager: ViewPager
-    private val pagerAdapter = BottomPagerAdapter(supportFragmentManager)
+    private var page = 1
+    private var finalPage = 1
+    private val itemManager = ItemManager()
+    private val viewModel = ViewModel()
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        window.statusBarColor = Color.BLACK.withAlpha(80)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_main, container, false)
 
-        mainFragment = MainFragment.newInstance()
-        bookFragment = BookFragment.newInstance()
-        bottomTabLayout = tl_home_bottom
-        bottomViewPager = vp_home
-        pagerAdapter.apply {
-            add(mainFragment, "首页")
-            add(bookFragment, "书籍")
-        }
-        bottomViewPager.adapter = pagerAdapter
-        bottomTabLayout.setupWithViewPager(bottomViewPager)
-
-        tb_home.apply {
-            tv_title.text = getText(R.string.app_name)
-            tv_toolbar.text = getText(R.string.string_home)
-            setOnTouchListener(OnDoubleClickListener {
-                mainFragment.rv_frag_main.smoothScrollToPosition(0)
-                Toast.makeText(mainFragment.context, "回到顶部👌", Toast.LENGTH_SHORT).show()
-            })
-
-        }
-
-
-        /*
         loadingLiveData.postValue(false)
 
-        srl_home.apply {
+        view.srl_frag_main.apply {
             setOnRefreshListener {
                 setColorSchemeResources(R.color.colorPrimary)
                 if (loadingLiveData.value != true) {
@@ -76,14 +43,14 @@ class HomeActivity : AppCompatActivity() {
                     resetPage()
                     itemManager.autoRefresh {
                         removeAll { it is HomeItem }
-                        viewModel.getHome(this@HomeActivity)
+                        viewModel.getHome(this@MainFragment)
                     }
                 }
             }
         }
 
-        rv_home.apply {
-            layoutManager = LinearLayoutManager(this@HomeActivity)
+        view.rv_frag_main.apply {
+            layoutManager = LinearLayoutManager(this.context)
             adapter = ItemAdapter(itemManager)
             itemManager.autoRefresh { removeAll { it is HomeItem } }
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -93,18 +60,17 @@ class HomeActivity : AppCompatActivity() {
                         loadingLiveData.postValue(true)
                         viewModel.getHome(++page)
                         Toast.makeText(
-                            this@HomeActivity,
+                            this@MainFragment.context,
                             "第${page}页 共${finalPage}页",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             })
-        }*/
+        }
 
-//        viewModel.getHome(this)
+        viewModel.getHome(this)
 
-        /*
         homeLiveData.bindNonNull(this) { homePage ->
             finalPage = homePage.finalPage
             val items = mutableListOf<Item>()
@@ -113,7 +79,7 @@ class HomeActivity : AppCompatActivity() {
                     when (home.type) {
                         TYPE_WITH_PIC -> {
                             this.imageCard.visibility = View.VISIBLE
-                            Glide.with(this@HomeActivity)
+                            Glide.with(this@MainFragment.context)
                                 .load(home.image)
                                 .into(image)
                         }
@@ -124,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
                     name.text = home.name
                     description.text = home.description
                     card.setOnClickListener {
-                        val intent = Intent(this@HomeActivity, DetailActivity::class.java)
+                        val intent = Intent(this@MainFragment.context, DetailActivity::class.java)
                             .putExtra("url", home.url)
                         startActivity(intent)
                     }
@@ -138,12 +104,18 @@ class HomeActivity : AppCompatActivity() {
             } else {
                 itemManager.addAll(items)
             }
-        }*/
+        }
+        return view
     }
 
-/*    private fun resetPage() {
+    private fun resetPage() {
         page = 1
         finalPage = 1
-    }*/
+    }
 
+    companion object {
+        @JvmStatic
+        fun newInstance() = MainFragment()
+    }
 }
+
