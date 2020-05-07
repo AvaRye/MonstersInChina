@@ -8,13 +8,51 @@
 
 ---
 
-通过获取网页的 html 代码并用 Jsoup 解析得到数据。用 MVVM 简单分了个层，view 层是 UI 相关，service 层是数据处理和网络请求相关。还有 commons.rec 是复制过来的对 RecyclerView 相关处理的一层封装 DSL。
+通过获取网页的 html 代码并用 Jsoup 解析得到数据。简单分了个层，view 层是 UI 相关，service 层是数据处理和网络请求相关。还有 commons.rec 是复制过来的对 RecyclerView 相关处理的一层封装 DSL。
 
 ### view
 
-包括初始的 HomeActivity 和 DetailActivity、其中 RecyclerView 分别用到的 Item 和双击事件的扩展函数。
+包括初始的 HomeActivity 和 DetailActivity、两个Fragment、其中 RecyclerView 分别用到的 Item 、一些Adapter和双击事件的扩展函数。
 
-- HomeActivity 用一个简单的 RelativeLayout 作为顶部类似 Toolbar，下方是简单的 RecyclerView。一页显示的就是网页上一页显示的内容，监听滑动到底部后加载下一页，顶部有下拉刷新功能和自己写了个写了个 DoubleClick 双击顶部 Toolbar 回到顶端。
+- HomeActivity 
+
+```kotlin
+class HomeActivity : AppCompatActivity() {
+    private lateinit var mainFragment: MainFragment
+    private lateinit var bookFragment: BookFragment
+    private lateinit var bottomTabLayout: TabLayout
+    private lateinit var bottomViewPager: ViewPager
+    private val pagerAdapter = BottomPagerAdapter(supportFragmentManager)
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
+        window.statusBarColor = Color.BLACK.withAlpha(80)
+
+        mainFragment = MainFragment.newInstance()
+        bookFragment = BookFragment.newInstance()
+        bottomTabLayout = tl_home_bottom
+        bottomViewPager = vp_home
+        pagerAdapter.apply {
+            add(mainFragment, "首页")
+            add(bookFragment, "书籍")
+        }
+        bottomViewPager.adapter = pagerAdapter
+        bottomTabLayout.setupWithViewPager(bottomViewPager)
+
+        tb_home.apply {
+            tv_title.text = getText(R.string.app_name)
+            tv_toolbar.text = getText(R.string.string_home)
+            setOnTouchListener(OnDoubleClickListener {
+                mainFragment.rv_frag_main.smoothScrollToPosition(0)
+                Toast.makeText(mainFragment.context, "回到顶部👌", Toast.LENGTH_SHORT).show()
+            })
+        }
+}
+```
+
+- 用一个简单的 RelativeLayout 作为顶部类似 Toolbar，下方是简单的 RecyclerView。一页显示的就是网页上一页显示的内容，监听滑动到底部后加载下一页，顶部有下拉刷新功能和自己写了个写了个 DoubleClick 双击顶部 Toolbar 回到顶端。
 
 ```kotlin
 class OnDoubleClickListener(val onDoubleClick: () -> Unit) : View.OnTouchListener {
@@ -101,7 +139,6 @@ object SpiderApi {
 }
 
 val homeLiveData = MutableLiveData<HomePage>()
-val detailLiveData = MutableLiveData<DetailPage>()
 val loadingLiveData = MutableLiveData<Boolean>()//loading flag
 
 data class HomePage(
@@ -173,7 +210,7 @@ fun String.parseHomePage(): HomePage {
 }
 ```
 
-- ViewModel 其实就是个 Presenter（因为刷新状态需要 context emmm）具体就是使用协程处理网络请求，并传给 LiveData。awaitAndHandle 也是简单封装，也是拿来的
+- ViewModel 具体就是使用协程处理网络请求，并传给 LiveData。awaitAndHandle 也是简单封装，也是拿来的
 
   LiveData 使用观察者模式和 Activity 绑定，数据刷新比较灵活。
   
@@ -208,3 +245,10 @@ class ViewModel(private val context: Context) {
 
 - [构建 RecyclerViewDSL](https://www.kotliner.cn/2018/06/recyclerviewdsl/)
 - [DSL in Action](https://www.kotliner.cn/2018/04/dsl-in-action/)
+
+
+
+
+
+
+

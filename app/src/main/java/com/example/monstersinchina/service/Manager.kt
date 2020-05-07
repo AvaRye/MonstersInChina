@@ -84,18 +84,16 @@ fun String.parseBook(): List<Book> {
     val content = Jsoup.parse(this).body().getElementsByClass("entry themeform")[0]
     val letterList = content.getElementsByTag("p")
     val bookList = content.getElementsByTag("table")
-    /*   letterList.forEach {
-           list.apply {
-               add(Book(it.text(), null))
-               bookList[it.elementSiblingIndex()].getElementsByTag("a").forEach { book ->
-                   this.add(Book(book.text(), book.attr("href")))
-               }
-           }
-       }*/
 
-    bookList.forEach {
-        it.getElementsByTag("a").forEach { book ->
-            list.add(Book(book.text(), book.attr("href")))
+    var index = 0
+    letterList.forEach {
+        list.apply {
+            add(Book(it.text(), null))
+            if (!"IOUV".contains(it.text())) {//硬核
+                bookList[index++].getElementsByTag("a").forEach { book ->
+                    this.add(Book(book.text(), book.attr("href")))
+                }
+            }
         }
     }
 

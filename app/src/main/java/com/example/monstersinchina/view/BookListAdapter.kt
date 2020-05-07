@@ -33,7 +33,7 @@ class BookListAdapter(private val context: Context) : BaseAdapter() {
             letter.text = list[position].text
         } else {
             view.setOnClickListener {
-                val intent = Intent(context, DetailActivity::class.java)
+                val intent = Intent(context, MainFragment::class.java)
                     .putExtra("url", list[position].url)
                 context.startActivity(intent)
             }
