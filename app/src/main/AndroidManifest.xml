@@ -14,14 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="n">
-        <activity android:name=".view.DetailActivity" />
-        <activity android:name=".view.HomeActivity">
+        <activity android:name=".view.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.DetailActivity" />
+        <activity android:name=".view.HomeActivity" />
     </application>
 
 </manifest>

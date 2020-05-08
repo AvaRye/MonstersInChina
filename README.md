@@ -12,7 +12,7 @@
 
 ### view
 
-包括初始的 HomeActivity 和 DetailActivity、两个Fragment、其中 RecyclerView 分别用到的 Item 、一些Adapter和双击事件的扩展函数。
+包括启动页 WelcomeActivity、初始的 HomeActivity 和 DetailActivity、两个Fragment、其中 RecyclerView 分别用到的 Item 、一些Adapter和双击事件的扩展函数。
 
 - HomeActivity 
 
